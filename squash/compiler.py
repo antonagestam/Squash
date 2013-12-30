@@ -73,11 +73,18 @@ class Selector(object):
     def compile(self):
         return "%s {%s}" % (self.name, self.attributes.compile())
 
+    def __add__(self, other):
+        if self.name != other.name:
+            new_name = "%s,%s" % (self.name, other.name)
+        else:
+            new_name = self.name
+        return Selector(new_name, self.attributes + other.attributes)
+
 
 class Compiler(object):
     def __init__(self, code):
         self.code = code
-        self.selectors = []
+        self.selectors = {}
         self.attributes = AttributeSet()
 
     def _parse(self):
@@ -87,10 +94,13 @@ class Compiler(object):
             attributes = AttributeSet(attributes)
             self.attributes += attributes
             selectors = selector_list.split(',')
-            for selector in selectors:
-                selector = selector.strip()
-                if not selector in self.selectors:
-                    self.selectors.append(Selector(selector, attributes))
+            for selector_string in selectors:
+                selector_string = selector_string.strip()
+                selector = Selector(selector_string, attributes)
+                if not selector_string in self.selectors:
+                    self.selectors[selector_string] = selector
+                else:
+                    self.selectors[selector_string] += selector
 
         self.attributes._parse()
 
@@ -101,17 +111,15 @@ class Compiler(object):
 
         for _, attribute in self.attributes.iteritems():
             selectors = []
-            for selector in self.selectors:
+            for selector in self.selectors.itervalues():
                 if selector.attributes.has_attribute(attribute):
-                    print selector.name
-                    print attribute.compile()
-                    print "is in"
-                    print selector.attributes.compile()
                     selectors.append(Selector(selector.name, attribute.as_set()))
             new_selectors += selectors
 
-        #for s in new_selectors:
+        for s in new_selectors:
             #print s.compile()
+
+        #print self.code
 
         #print new_selectors
 
