@@ -1,3 +1,5 @@
+#!/usr/local/bin/python
+
 from squash.compiler import Compiler
 
 c = Compiler("""
