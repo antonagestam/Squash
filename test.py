@@ -1,4 +1,4 @@
-from css_compiler.compiler import Compiler
+from squash.compiler import Compiler
 
 c = Compiler("""
 .noselect, .ellipsify {
