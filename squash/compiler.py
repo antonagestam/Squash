@@ -3,32 +3,35 @@ from .classes import AttributeSet, Selector
 
 
 class Compiler(object):
-    def __init__(self, code):
-        self.code = code
-        self.selectors = {}
-        self.attributes = AttributeSet()
+    def __init__(self, source):
+        self.source = source
 
-    def _parse(self):
-        for selector_list, attributes in SELECTOR_PATTERN.findall(self.code):
-            attributes = AttributeSet(attributes)
-            self.attributes += attributes
-            selectors = selector_list.split(',')
-            for selector_string in selectors:
+    def _parse(self, source):
+        selectors = {}
+        attributes = AttributeSet()
+
+        for selector_list, attribute_set in SELECTOR_PATTERN.findall(source):
+            attribute_set = AttributeSet(attribute_set)
+            attributes += attribute_set
+            selector_list = selector_list.split(',')
+            for selector_string in selector_list:
                 selector_string = selector_string.strip()
-                selector = Selector(selector_string, attributes)
-                if not selector_string in self.selectors:
-                    self.selectors[selector_string] = selector
+                selector = Selector(selector_string, attribute_set)
+                if not selector_string in selectors:
+                    selectors[selector_string] = selector
                 else:
-                    self.selectors[selector_string] += selector
+                    selectors[selector_string] += selector
 
-        self.attributes.parse()
+        attributes.parse()
 
-    def _combine(self):
+        return selectors, attributes
+
+    def _combine(self, selectors, attributes):
         new_selectors = []
 
-        for _, attribute in self.attributes.iteritems():
+        for _, attribute in attributes.iteritems():
             attribute_selector = None
-            for __, selector in self.selectors.iteritems():
+            for __, selector in selectors.iteritems():
                 if selector.attributes.has_attribute(attribute):
                     selector = Selector(selector.name, attribute.as_set())
 
@@ -45,7 +48,10 @@ class Compiler(object):
         return new_selectors
 
     def compile(self):
-        self._parse()
-        combined = self._combine()
-
+        combined = self._combine(*self._parse(self.source))
         return '\n'.join(map(Selector.compile, combined))
+
+
+def squash(code):
+    c = Compiler(code)
+    return c.compile()

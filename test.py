@@ -1,8 +1,8 @@
 #!/usr/local/bin/python
 
-from squash.compiler import Compiler
+from squash.compiler import squash
 
-c = Compiler("""
+result = squash("""
 .noselect {
   wtf: yes;
 }
@@ -22,4 +22,8 @@ c = Compiler("""
   overflow: hidden;
 }""")
 
-print c.compile()
+print result
+
+assert result == (""".noselect,.ellipsify {-webkit-user-select: none;-moz-user-select: none;-webkit-touch-callout: none;-khtml-user-select: none;-ms-user-select: none;user-select: none;}
+.ellipsify {white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+.noselect {wtf: yes;}""")
