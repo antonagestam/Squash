@@ -3,6 +3,10 @@
 from squash.compiler import Compiler
 
 c = Compiler("""
+.noselect {
+  wtf: yes;
+}
+
 .noselect, .ellipsify {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -11,9 +15,11 @@ c = Compiler("""
   -ms-user-select: none;
   user-select: none;
 }
+
 .ellipsify {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }""")
-c.compile()
+
+print c.compile()
