@@ -49,9 +49,8 @@ class Compiler(object):
 
     def compile(self):
         combined = self._combine(*self._parse(self.source))
-        return '\n'.join(map(Selector.compile, combined))
+        return ''.join(map(Selector.compile, combined))
 
 
-def squash(code):
-    c = Compiler(code)
-    return c.compile()
+def squash(source):
+    return Compiler(source).compile()

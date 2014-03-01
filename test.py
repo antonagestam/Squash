@@ -1,11 +1,14 @@
-#!/usr/local/bin/python
+#!./bin/python
 
 from squash import squash
+from squash.benchmark import benchmark
 
-result = squash("""
+
+source = """
 .noselect {
   wtf: yes;
   color: green;
+  hello: goodbye;
 }
 
 .noselect, .ellipsify {
@@ -22,10 +25,19 @@ result = squash("""
   white-space: nowrap;
   overflow: hidden;
   color: green;
-}""")
+}
+
+.ellipsify > .noselect {
+  dimensions: infinite;
+  pixels: five;
+  hello: goodbye;
+}
+
+@
+
+"""
+result = squash(source)
 
 print result
 
-assert result == (""".noselect,.ellipsify {-webkit-user-select: none;-moz-user-select: none;-webkit-touch-callout: none;-khtml-user-select: none;-ms-user-select: none;user-select: none;color: green;}
-.ellipsify {white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
-.noselect {wtf: yes;}""")
+benchmark(source)

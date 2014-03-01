@@ -16,7 +16,7 @@ class Attribute(object):
         return m.hexdigest()
 
     def compile(self):
-        return "%s: %s;" % (self.name, self.value)
+        return "%s: %s;\n" % (self.name, self.value)
 
     def as_set(self):
         attributes = AttributeSet()
@@ -68,11 +68,11 @@ class Selector(object):
         self.attributes = attributes
 
     def compile(self):
-        return "%s {%s}" % (self.name, self.attributes.compile())
+        return "%s {\n%s}\n" % (self.name, self.attributes.compile())
 
     def __add__(self, other):
         if self.name != other.name:
-            new_name = "%s,%s" % (self.name, other.name)
+            new_name = "%s, %s" % (self.name, other.name)
         else:
             new_name = self.name
         return Selector(new_name, self.attributes + other.attributes)
