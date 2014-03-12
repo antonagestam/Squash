@@ -9,10 +9,8 @@ Usage
 -----
 
 ```python
-from squash import squash
-
-
-print squash("""
+>>> from squash import squash
+>>> print squash("""
 .noselect, .ellipsify {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -42,3 +40,5 @@ print squash("""
 }
 """)
 ```
+
+There's also a benchmark function, `squash.benchmark.benchmark`, that prints out how many characters of code that Squash was able to reduce the code by.
