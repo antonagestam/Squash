@@ -1,44 +1,35 @@
-Squash
-======
+# Squash
 
-Squash is a next-step CSS minifier. It parses your stylesheets and finds selectors that has the same attributes and then batches them together. This way it's possible make your stylesheets even smaller than with ordinary whitespace-removing tools.
+**Disclaimer:** Squash is still under development. It's not ready for production and is [fairly destructive](issues).
 
-The goal is for this project to evolve into an easy-to-use command line tool.
+Squash is like pre-processors' `@extend`, but for CSS. It parses your stylesheets and finds selectors that have the same properties/values and combines them together under the same selector. This way it's possible make your stylesheets even more efficient than with ordinary CSS compression tools.
 
-Usage
------
-
+### Usage
 ```python
 >>> from squash import squash
 >>> print squash("""
-.noselect, .ellipsify {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+.foo {
+  background: red;
 }
-
-.ellipsify {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  color: green;
-}
-
-.ellipsify > .noselect {
-  dimensions: infinite;
-  pixels: five;
-  hello: goodbye;
-}
-
-.noselect {
-  wtf: yes;
-  color: green;
-  hello: goodbye;
+.bar {
+  background: red;
+  font-size: 12px;
 }
 """)
 ```
 
-There's also a benchmark function, `squash.benchmark.benchmark`, that prints out how many characters of code that Squash was able to reduce the code by.
+### Result
+```css
+.bar {
+font-size: 12px;
+}
+.foo, .bar {
+background: red;
+}
+```
+
+### Benchmark
+- `squash.benchmark.benchmark`
+
+### Project Roadmap
+- Turn into an easy-to-install/use package
